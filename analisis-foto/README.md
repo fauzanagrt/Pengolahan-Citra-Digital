@@ -1,894 +1,296 @@
-# Analisis Foto Menggunakan Python
+# Analisis Foto Digital Menggunakan Python
 
-## 1. Latar Belakang
+## Deskripsi Proyek
 
-Gambar yang terlihat oleh manusia sebenarnya disimpan oleh komputer sebagai data angka.
+Proyek ini dibuat untuk menganalisis sebuah citra digital menggunakan bahasa pemrograman Python. Analisis dilakukan untuk memahami informasi yang tersimpan dalam file gambar, metadata, representasi gambar sebagai angka, serta statistik nilai pixel.
 
-Pada gambar berwarna RGB, setiap pixel mempunyai tiga nilai:
+Program menggunakan gambar `IMG_2.jpg` sebagai objek analisis. Gambar diproses menggunakan beberapa library Python untuk memperoleh informasi teknis dan melakukan pemeriksaan terhadap data citra.
 
-- **R (Red)** = merah
-- **G (Green)** = hijau
-- **B (Blue)** = biru
+Proyek ini dibuat sebagai tugas mata kuliah **Pengolahan Citra Digital**.
 
-Setiap nilai biasanya berada pada rentang 0 sampai 255. Karena itu, warna sebuah pixel dapat ditulis seperti `[255, 0, 0]` untuk merah.
+## Tujuan
 
-Project ini dibuat untuk membongkar sebuah foto nyata menggunakan Python, melihat informasi file, membaca metadata EXIF bila tersedia, dan melihat pixel sebagai angka dengan NumPy.
+Tujuan dari proyek ini adalah:
 
-> **Catatan:** Foto pada folder `foto/` adalah foto nyata yang dimasukkan ke project, bukan foto yang dibuat secara manual oleh program.
+1. Mengetahui informasi dasar dari sebuah file gambar.
+2. Memahami metadata dan EXIF yang terdapat pada gambar.
+3. Memahami representasi citra digital dalam bentuk array NumPy.
+4. Mengetahui hubungan antara koordinat pixel dan nilai warna RGB.
+5. Menghitung statistik warna dan tingkat kecerahan gambar.
+6. Menganalisis kontras serta jumlah warna unik.
+7. Memverifikasi jumlah pixel berdasarkan dimensi gambar.
+8. Memahami perbedaan ukuran file JPEG dan ukuran data pixel mentah.
+9. Mengidentifikasi file menggunakan algoritma hash SHA-256.
+10. Memahami alur kode Python yang digunakan dalam analisis citra digital.
 
----
+## Teknologi dan Library
 
-## 2. Tujuan Project
+Proyek ini menggunakan teknologi berikut:
 
-Project ini bertujuan untuk memahami:
+* **Python** — bahasa pemrograman untuk menjalankan proses analisis.
+* **Pillow (PIL)** — membuka gambar dan membaca informasi gambar serta metadata EXIF.
+* **NumPy** — mengubah gambar menjadi array numerik dan menghitung statistik pixel.
+* **Library standar Python** — mendukung operasi file, pengolahan data, dan perhitungan hash sesuai implementasi program.
 
-1. Apa itu gambar digital.
-2. Apa itu pixel.
-3. Apa itu RGB.
-4. Bagaimana gambar dibaca oleh Python.
-5. Bagaimana metadata/EXIF dibaca.
-6. Bagaimana gambar diubah menjadi NumPy array.
-7. Bagaimana cara membaca nilai pixel tertentu.
-
----
-
-## 3. Teknologi yang Digunakan
-
-- **Python** — bahasa pemrograman utama.
-- **Pillow (PIL)** — membuka gambar, membaca informasi gambar, dan membaca EXIF.
-- **NumPy** — mengubah pixel menjadi array angka.
-
-Project sengaja tidak memakai framework atau library tambahan yang tidak diperlukan.
-
----
-
-## 4. Struktur Project
+## Struktur Proyek
 
 ```text
-analisis-foto-python/
-│
+Analisis-Foto-Python/
 ├── foto/
-│   └── foto.jpg
-│
+│   └── IMG_2.jpg
 ├── analisis_foto.py
+├── Output.txt
 ├── requirements.txt
-├── .gitignore
 └── README.md
 ```
 
----
+Keterangan:
 
-## 5. Cara Instalasi
+* `foto/IMG_2.jpg` merupakan gambar yang dianalisis.
+* `analisis_foto.py` merupakan program utama untuk melakukan analisis gambar.
+* `Output.txt` menyimpan hasil analisis yang dihasilkan program.
+* `requirements.txt` berisi daftar library Python yang dibutuhkan.
+* `README.md` berisi dokumentasi proyek.
 
-### A. Pastikan Python sudah terpasang
+## Fitur Analisis
 
-Di terminal / PowerShell jalankan:
+Program melakukan beberapa jenis analisis terhadap gambar.
 
-```bash
-python --version
-```
+### 1. Informasi Dasar File
 
-Contoh:
+Mengidentifikasi nama file, ekstensi, format gambar, ukuran file, dimensi gambar, jumlah pixel, dan mode warna.
 
-```text
-Python 3.10.6
-```
+### 2. Aspect Ratio
 
-Versi Python yang lebih baru juga dapat digunakan selama library yang diperlukan berhasil terpasang.
+Menghitung rasio antara lebar dan tinggi gambar untuk mengetahui proporsi serta orientasi citra.
 
-### B. Masuk ke folder project
+### 3. Metadata EXIF
 
-```bash
-cd analisis-foto-python
-```
+Membaca informasi EXIF yang tersedia, seperti merek dan model perangkat, tanggal pengambilan gambar, orientasi, serta informasi resolusi.
 
-### C. Buat virtual environment (disarankan)
+Tidak semua gambar memiliki metadata yang lengkap. Informasi yang tidak tersimpan atau tidak tersedia akan ditampilkan sebagai tidak tersedia.
 
-Windows:
+### 4. Informasi GPS
 
-```bash
-python -m venv .venv
-```
+Memeriksa metadata GPS yang tersimpan dalam gambar, termasuk lintang, bujur, ketinggian, waktu GPS, dan metode pemrosesan GPS jika tersedia.
 
-Aktifkan:
+**Catatan privasi:** metadata GPS dapat mengungkap lokasi pengambilan gambar. Pastikan informasi lokasi tidak dibagikan secara publik jika bersifat pribadi.
 
-```bash
-.venv\Scripts\activate
-```
+### 5. Representasi Gambar sebagai Array NumPy
 
-### D. Install dependency
+Gambar RGB diubah menjadi array tiga dimensi yang berisi nilai numerik setiap pixel.
 
-```bash
-pip install -r requirements.txt
-```
-
----
-
-## 6. Cara Menjalankan Program
-
-Pastikan foto berada di:
-
-```text
-foto/foto.jpg
-```
-
-Kemudian jalankan:
-
-```bash
-python analisis_foto.py
-```
-
-Program akan:
-
-1. membuka foto,
-2. membaca informasi dasar,
-3. membaca EXIF,
-4. mengubah foto menjadi NumPy array,
-5. menampilkan beberapa nilai pixel.
-
----
-
-## 7. Penjelasan Proses Analisis
-
-### A. Informasi dasar gambar
-
-Program menampilkan:
-
-- nama file,
-- format,
-- ukuran file,
-- resolusi,
-- mode warna,
-- jumlah pixel.
-
-Untuk foto yang digunakan pada project ini, hasil pembacaan file adalah:
-
-```text
-Nama file       : foto.jpg
-Format gambar   : JPEG
-Ukuran file     : 638,794 byte
-Resolusi        : 1152 x 2048 pixel
-Mode warna      : RGB
-Jumlah pixel    : 2,359,296 pixel
-```
-
-Jumlah pixel dihitung:
-
-```text
-1152 x 2048 = 2,359,296 pixel
-```
-
-Jadi foto ini mempunyai lebih dari 2,3 juta pixel.
-
----
-
-## 8. Penjelasan Metadata / EXIF
-
-EXIF (Exchangeable Image File Format) adalah informasi tambahan yang dapat disimpan bersama file foto.
-
-Contoh data yang sering dapat ditemukan:
-
-- Camera Make
-- Camera Model
-- Date/Time
-- ISO
-- Exposure Time
-- F-Number / Aperture
-- Focal Length
-- GPS
-
-Namun, **EXIF tidak selalu tersedia**.
-
-Pada foto yang dipakai dalam project ini, Python membaca:
-
-```text
-EXIF: Tidak tersedia pada foto ini.
-```
-
-Artinya program tidak membuat atau mengarang metadata. Program hanya menampilkan data yang benar-benar ada di file.
-
-Hal ini penting ketika membandingkan foto asli dari kamera/HP dengan foto yang berasal dari media sosial, screenshot, website, atau hasil kompresi, karena metadata dapat hilang saat file diproses ulang.
-
----
-
-## 9. Pixel dan RGB
-
-Satu pixel pada gambar RGB mempunyai tiga angka.
-
-Contoh:
-
-```text
-[255, 0, 0]
-```
-
-artinya:
-
-```text
-R = 255
-G = 0
-B = 0
-```
-
-Hasilnya adalah warna **merah**.
-
-Contoh lain:
-
-```text
-[0, 255, 0]
-```
-
-adalah hijau.
-
-Dan:
-
-```text
-[0, 0, 255]
-```
-
-adalah biru.
-
-Karena setiap channel menggunakan nilai 0 sampai 255, sebuah pixel RGB dapat direpresentasikan dengan tiga angka.
-
----
-
-## 10. Array NumPy
-
-Ketika gambar RGB diubah menggunakan:
+Struktur array:
 
 ```python
-array_image = np.array(image)
+(height, width, channels)
 ```
 
-bentuk array foto menjadi:
-
-```text
-(2048, 1152, 3)
-```
+Pada gambar yang dianalisis, bentuk array adalah `(4080, 3072, 3)`.
 
 Artinya:
 
-- `2048` = tinggi gambar,
-- `1152` = lebar gambar,
-- `3` = jumlah channel warna RGB.
+* Dimensi pertama menunjukkan tinggi atau baris pixel.
+* Dimensi kedua menunjukkan lebar atau kolom pixel.
+* Dimensi ketiga menunjukkan tiga channel warna, yaitu Red, Green, dan Blue.
 
-Secara konsep:
+### 6. Analisis Nilai Pixel
 
-```text
-array_image[y][x] = [R, G, B]
-```
+Program mengambil beberapa sampel pixel untuk mengetahui nilai RGB pada koordinat tertentu.
 
-Perhatikan bahwa NumPy menggunakan urutan:
-
-```text
-[y, x]
-```
-
-bukan:
-
-```text
-[x, y]
-```
-
-Karena itu, jika kita ingin membaca pixel pada koordinat:
-
-```text
-x = 100
-y = 100
-```
-
-maka Python membaca:
-
-```python
-array_image[100, 100]
-```
-
----
-
-## 11. Contoh Nilai Pixel dari Foto Nyata
-
-Beberapa hasil pembacaan pixel dari foto yang digunakan:
-
-```text
-Pixel (x=0, y=0) = [118, 118, 110]
-Pixel (x=10, y=10) = [132, 131, 126]
-Pixel (x=100, y=100) = [129, 130, 125]
-Pixel (x=500, y=500) = [162, 159, 152]
-Pixel (x=1000, y=500) = [214, 213, 211]
-```
-
-Misalnya:
-
-```text
-[162, 159, 152]
-```
-
-berarti pixel tersebut mempunyai:
-
-```text
-Red   = 162
-Green = 159
-Blue  = 152
-```
-
-Karena nilainya berbeda-beda, warnanya bukan merah, hijau, atau biru murni. Kombinasi ketiga angka tersebut menghasilkan warna tertentu yang dilihat mata.
-
----
-
-## 12. Penjelasan Line-by-Line
-
-Bagian ini sengaja dibuat untuk membantu memahami alur kode.
-
-### 12.1 Import Library
-
-```python
-from pathlib import Path
-import os
-
-from PIL import Image, ExifTags
-import numpy as np
-```
-
-**`from pathlib import Path`**
-
-Mengambil class `Path` dari library Python bawaan. `Path` digunakan untuk membuat dan membaca lokasi file dengan lebih rapi.
-
-**`import os`**
-
-Mengimpor modul `os`. Pada project ini digunakan untuk mengambil ukuran file:
-
-```python
-os.path.getsize(...)
-```
-
-**`from PIL import Image, ExifTags`**
-
-`PIL` adalah bagian dari Pillow.
-
-- `Image` digunakan untuk membuka gambar.
-- `ExifTags` digunakan untuk mengenali nama tag EXIF.
-
-**`import numpy as np`**
-
-Mengimpor NumPy dengan nama pendek `np`. NumPy dipakai untuk bekerja dengan array angka.
-
----
-
-### 12.2 Menentukan Lokasi File
-
-```python
-IMAGE_PATH = Path("foto/foto.jpg")
-```
-
-`IMAGE_PATH` menunjuk ke foto yang akan dianalisis.
-
----
-
-### 12.3 Mengecek File
-
-```python
-if not IMAGE_PATH.exists():
-```
-
-`exists()` mengecek apakah file benar-benar ada.
-
-`not` berarti kondisi dibalik.
-
-Jika file tidak ada, program masuk ke:
-
-```python
-raise FileNotFoundError(...)
-```
-
-Program berhenti dan memberikan pesan kesalahan agar pengguna tahu bahwa foto belum diletakkan di folder yang benar.
-
----
-
-### 12.4 Membuka Foto
-
-```python
-image = Image.open(IMAGE_PATH)
-```
-
-`Image.open()` membaca file gambar.
-
-Variabel `image` sekarang menyimpan objek gambar yang dapat diperiksa dan diproses oleh Pillow.
-
----
-
-### 12.5 Mengambil Nama File
-
-```python
-file_name = IMAGE_PATH.name
-```
-
-`.name` mengambil bagian nama file dari sebuah path.
-
-Hasil:
-
-```text
-foto.jpg
-```
-
----
-
-### 12.6 Mengambil Format
-
-```python
-image_format = image.format
-```
-
-Pillow membaca jenis file yang dibuka.
-
-Pada foto project ini:
-
-```text
-JPEG
-```
-
----
-
-### 12.7 Mengambil Ukuran File
-
-```python
-file_size = os.path.getsize(IMAGE_PATH)
-```
-
-Baris ini membaca ukuran file dalam byte.
-
-Hasil pada foto project:
-
-```text
-638,794 byte
-```
-
----
-
-### 12.8 Mengambil Resolusi
-
-```python
-width, height = image.size
-```
-
-`image.size` menghasilkan dua nilai:
-
-```text
-(lebar, tinggi)
-```
-
-Pada foto project:
-
-```text
-1152 x 2048
-```
-
----
-
-### 12.9 Mengambil Mode Warna
-
-```python
-color_mode = image.mode
-```
-
-Pada foto ini hasilnya:
-
-```text
-RGB
-```
-
-RGB berarti gambar mempunyai tiga channel:
-
-```text
-R, G, B
-```
-
----
-
-### 12.10 Menghitung Jumlah Pixel
-
-```python
-total_pixels = width * height
-```
-
-Jumlah pixel dihitung dari:
-
-```text
-lebar x tinggi
-```
-
-Pada foto project:
-
-```text
-1152 x 2048 = 2,359,296
-```
-
----
-
-### 12.11 Membaca EXIF
-
-```python
-exif = image.getexif()
-```
-
-Pillow mencoba membaca data EXIF dari file.
-
-Pada foto project, hasilnya kosong sehingga program menampilkan:
-
-```text
-EXIF: Tidak tersedia pada foto ini.
-```
-
-Tidak tersedia bukan berarti program error. Artinya file tersebut memang tidak mempunyai EXIF yang dapat dibaca.
-
----
-
-### 12.12 Mencari Data Kamera
-
-```python
-exif_tags = {
-    "Camera Make": 271,
-    "Camera Model": 272,
-    ...
-}
-```
-
-Dictionary tersebut berisi nama data yang ingin dicari dan ID tag EXIF-nya.
+Setiap pixel RGB direpresentasikan oleh tiga nilai, dengan rentang masing-masing channel dari 0 sampai 255.
 
 Contoh:
-
-```text
-271 = Camera Make
-272 = Camera Model
-```
-
----
-
-### 12.13 Mengambil Nilai EXIF
-
-```python
-value = exif.get(tag_id)
-```
-
-Python meminta nilai dari tag EXIF tertentu.
-
-Jika nilai tidak ditemukan:
-
-```python
-if value is None:
-```
-
-program menampilkan:
-
-```text
-Tidak tersedia
-```
-
-Hal ini mencegah program mengarang data.
-
----
-
-### 12.14 Mengubah Gambar Menjadi Array
-
-```python
-array_image = np.array(image)
-```
-
-Ini adalah salah satu baris terpenting project.
-
-Gambar yang awalnya berupa objek gambar diubah menjadi kumpulan angka NumPy.
-
-Hasil:
-
-```text
-(2048, 1152, 3)
-```
-
-Artinya:
-
-```text
-2048 baris
-1152 kolom
-3 channel
-```
-
----
-
-### 12.15 Membaca Informasi Array
-
-```python
-array_image.shape
-```
-
-`.shape` memberi tahu bentuk atau dimensi array.
-
-```python
-array_image.dtype
-```
-
-`.dtype` menunjukkan jenis angka yang digunakan.
-
-Pada foto ini:
-
-```text
-uint8
-```
-
-`uint8` berarti satu nilai channel disimpan sebagai bilangan unsigned 8-bit, dengan rentang 0 sampai 255.
-
----
-
-### 12.16 Membaca Pixel
 
 ```python
 pixel = array_image[y, x]
 ```
 
-Baris tersebut mengambil satu pixel.
+NumPy menggunakan urutan baris kemudian kolom, sehingga koordinat gambar `(x, y)` diakses melalui `array_image[y, x]`.
 
-Misalnya:
+### 7. Statistik Warna RGB
 
-```text
-x = 100
-y = 100
-```
+Menghitung nilai minimum, maksimum, rata-rata, median, dan standar deviasi pada setiap channel warna.
 
-maka:
+Statistik tersebut membantu menjelaskan distribusi intensitas warna dalam gambar.
 
-```python
-array_image[100, 100]
-```
+### 8. Analisis Brightness dan Kontras
 
-akan menghasilkan:
+Menghitung statistik kecerahan gambar dan standar deviasi brightness untuk membantu memahami variasi intensitas pixel.
 
-```text
-[129, 130, 125]
-```
+Nilai standar deviasi yang lebih besar menunjukkan penyebaran nilai brightness yang lebih lebar, tetapi tidak secara langsung menentukan kualitas visual gambar.
 
-Tiga angka itu adalah:
+### 9. Jumlah Warna Unik
 
-```text
-R = 129
-G = 130
-B = 125
-```
+Menghitung jumlah kombinasi warna RGB berbeda yang ditemukan pada seluruh pixel gambar.
 
----
+Dua pixel dapat memiliki warna yang sama meskipun berada pada posisi berbeda.
 
-## 13. Kenapa Gambar Bisa Diubah Menjadi Array?
+### 10. Sampling Pixel dalam Grid
 
-Karena komputer tidak memahami gambar seperti manusia.
+Mengambil sampel nilai RGB dari sejumlah koordinat yang tersebar di seluruh gambar untuk memberikan gambaran tentang variasi warna pada berbagai bagian citra.
 
-Manusia melihat:
+### 11. Verifikasi Jumlah Pixel
 
-> meja, makanan, piring, kaca, dan warna.
-
-Komputer bekerja dengan data numerik.
-
-Gambar RGB dapat dilihat secara sederhana seperti:
+Memeriksa apakah jumlah pixel sesuai dengan hasil perkalian tinggi dan lebar gambar.
 
 ```text
-Pixel 1 -> [118, 118, 110]
-Pixel 2 -> [132, 131, 126]
-Pixel 3 -> [129, 130, 125]
-...
+Jumlah pixel = tinggi × lebar
+             = 4080 × 3072
+             = 12.533.760 pixel
 ```
 
-Jadi gambar dapat dianggap sebagai matriks besar yang berisi angka.
+### 12. Estimasi Data Pixel Mentah
 
-Untuk RGB:
+Mengestimasi ukuran data pixel berdasarkan jumlah pixel dan jumlah channel warna.
+
+Untuk gambar RGB dengan tipe data `uint8`, setiap channel membutuhkan 1 byte.
 
 ```text
-tinggi x lebar x 3
+Ukuran data mentah = tinggi × lebar × channel
+                   = 4080 × 3072 × 3
+                   = 37.601.280 byte
 ```
 
-Pada project ini:
+Ukuran data mentah ini berbeda dari ukuran file JPEG karena JPEG menggunakan kompresi.
 
-```text
-2048 x 1152 x 3
-```
+### 13. Tipe Data Pixel
 
----
+Memeriksa tipe data array NumPy. Pada hasil analisis, tipe datanya adalah `uint8`, yaitu bilangan bulat tanpa tanda dengan rentang nilai 0 sampai 255.
 
-## 14. Apa Bedanya Metadata dan Pixel?
+### 14. Identitas File dengan SHA-256
 
-**Pixel** adalah isi visual gambar.
+Menghitung hash SHA-256 untuk menghasilkan sidik digital file. Hash dapat digunakan untuk membandingkan apakah dua file memiliki isi identik, selama hash dihitung atas keseluruhan byte file dengan metode yang sama.
 
-Pixel menentukan warna dan tampilan gambar.
+### 15. Informasi Khusus JPEG
 
-**Metadata/EXIF** adalah informasi tambahan mengenai file/foto.
+Memeriksa keberadaan tabel kuantisasi JPEG. Tabel ini berkaitan dengan proses kompresi JPEG yang dapat memengaruhi detail dan kualitas citra.
 
-Contoh metadata:
+## Hasil Analisis
 
-```text
-kamera
-tanggal pengambilan
-ISO
-aperture
-focal length
-GPS
-```
+Berdasarkan output program, diperoleh hasil sebagai berikut.
 
-Jadi:
+| Parameter                    | Hasil             |
+| ---------------------------- | ----------------- |
+| Nama file                    | `IMG_2.jpg`       |
+| Format                       | JPEG              |
+| Ukuran file                  | 5.345.947 byte    |
+| Dimensi                      | 3072 × 4080 pixel |
+| Jumlah pixel                 | 12.533.760        |
+| Aspect ratio                 | 0,7529            |
+| Orientasi                    | Portrait          |
+| Mode warna                   | RGB               |
+| Bentuk array NumPy           | `(4080, 3072, 3)` |
+| Tipe data                    | `uint8`           |
+| Ukuran data pixel mentah     | 37.601.280 byte   |
+| Jumlah warna unik            | 192.992           |
+| Rata-rata Red                | 105,61            |
+| Rata-rata Green              | 106,65            |
+| Rata-rata Blue               | 96,56             |
+| Rata-rata brightness         | 105,19            |
+| Standar deviasi brightness   | 70,47             |
+| Jumlah tabel kuantisasi JPEG | 2                 |
 
-```text
-Pixel   -> membentuk gambar
-EXIF    -> memberi informasi tentang gambar
-```
+### Ringkasan Metadata
 
-Keduanya berbeda.
+Metadata yang terbaca menunjukkan bahwa gambar memiliki informasi merek perangkat Xiaomi dan model `220333QAG`. Tanggal dan waktu yang tercatat adalah `2026:08:13 07:45:32`.
 
----
+Metadata GPS juga tersedia dalam file. Karena informasi tersebut dapat menunjukkan lokasi, detail koordinat tidak dicantumkan dalam ringkasan README ini.
 
-## 15. Kenapa EXIF Foto Bisa Tidak Ada?
+### Interpretasi Hasil
 
-Tidak semua file JPG menyimpan EXIF.
+1. Gambar memiliki lebih dari 12,5 juta pixel, sehingga menyediakan banyak data untuk dianalisis.
+2. Array NumPy memungkinkan setiap pixel diakses dan diolah sebagai data numerik.
+3. Nilai rata-rata channel RGB menunjukkan ringkasan intensitas masing-masing warna, bukan identifikasi warna dominan secara keseluruhan.
+4. Standar deviasi brightness sebesar 70,47 menunjukkan variasi intensitas pixel yang cukup lebar.
+5. Terdapat 192.992 kombinasi RGB unik di antara seluruh pixel gambar.
+6. Ukuran data pixel mentah lebih besar daripada ukuran file JPEG karena data gambar pada file JPEG telah dikompresi.
+7. Hash SHA-256 menyediakan cara untuk membandingkan identitas digital file.
+8. Sebagian metadata EXIF tersedia, sedangkan informasi kamera lainnya tidak ditemukan pada output.
 
-Metadata dapat tidak tersedia karena:
+## Instalasi dan Cara Menjalankan
 
-- foto sudah diproses ulang,
-- di-screenshot,
-- diunduh dari website,
-- diekspor dari aplikasi,
-- dikompresi oleh platform tertentu.
+### Persyaratan
 
-Karena itu, hasil EXIF dari foto Google, media sosial, screenshot, dan foto asli dari kamera dapat berbeda.
-
----
-
-## 16. Kesimpulan
-
-Project ini menunjukkan bahwa gambar digital sebenarnya adalah data numerik.
-
-Foto yang digunakan mempunyai:
-
-```text
-Resolusi : 1152 x 2048 pixel
-Pixel    : 2,359,296
-Mode     : RGB
-Array    : (2048, 1152, 3)
-```
-
-Setiap pixel RGB terdiri dari tiga angka yang mewakili Red, Green, dan Blue.
-
-Dengan Pillow, Python dapat membuka gambar dan membaca metadata jika tersedia.
-
-Dengan NumPy, pixel dapat dilihat sebagai angka.
-
----
-
-## 17. Pertanyaan yang Mungkin Ditanyakan Dosen
-
-### 1. Apa itu pixel?
-
-Pixel adalah unit terkecil yang menyusun gambar digital. Setiap pixel menyimpan informasi warna.
-
-### 2. Mengapa RGB memiliki 3 angka?
-
-Karena RGB menggunakan tiga channel warna dasar: Red, Green, dan Blue.
-
-### 3. Apa arti `[255, 0, 0]`?
-
-Artinya:
-
-```text
-R = 255
-G = 0
-B = 0
-```
-
-Sehingga warnanya merah.
-
-### 4. Apa itu EXIF?
-
-EXIF adalah metadata yang dapat menyimpan informasi tambahan tentang foto, misalnya kamera, waktu pengambilan, ISO, aperture, focal length, dan GPS.
-
-### 5. Apa perbedaan metadata dan pixel?
-
-Pixel membentuk isi visual foto, sedangkan metadata memberikan informasi tambahan tentang file/foto.
-
-### 6. Mengapa gambar bisa diubah menjadi array?
-
-Karena gambar digital pada dasarnya dapat direpresentasikan sebagai angka. NumPy sangat cocok untuk mengolah kumpulan angka tersebut.
-
-### 7. Apa fungsi NumPy?
-
-NumPy digunakan untuk membuat dan mengolah array angka secara efisien. Pada project ini, NumPy dipakai untuk membaca nilai pixel.
-
-### 8. Apa fungsi Pillow?
-
-Pillow digunakan untuk membuka gambar, membaca informasi gambar, dan membaca EXIF.
-
-### 9. Berapa jumlah pixel pada gambar yang digunakan?
-
-```text
-1152 x 2048 = 2,359,296 pixel
-```
-
-### 10. Mengapa metadata foto dari Google bisa berbeda dengan foto asli?
-
-Karena file yang diunduh dari internet bisa sudah diproses, dikompresi, diekspor ulang, atau metadata EXIF-nya dihapus.
-
-### 11. Mengapa indeks array ditulis `[y, x]`?
-
-Karena NumPy menyimpan data gambar berdasarkan urutan baris kemudian kolom, yaitu tinggi/y lalu lebar/x.
-
-### 12. Apa arti `uint8`?
-
-`uint8` adalah tipe data bilangan bulat tanpa tanda yang menggunakan 8 bit. Untuk data RGB umum, nilainya berada pada 0 sampai 255.
-
-### 13. Apakah setiap JPG pasti memiliki EXIF?
-
-Tidak. EXIF bersifat metadata tambahan dan dapat tidak ada pada sebuah file JPG.
-
----
-
-## 18. GitHub
-
-### A. Buat repository
-
-Contoh nama repository:
-
-```text
-analisis-foto-python
-```
-
-Buat repository kosong di GitHub.
-
-### B. Dari folder project
+Pastikan Python sudah terpasang di komputer. Periksa instalasi melalui terminal:
 
 ```bash
-git init
-git add .
-git commit -m "Initial project analisis foto Python"
+python --version
 ```
 
-### C. Hubungkan ke GitHub
+### 1. Clone Repository
 
-Contoh:
+Jika proyek berada di GitHub, unduh repository menggunakan:
 
 ```bash
-git branch -M main
-git remote add origin https://github.com/USERNAME/analisis-foto-python.git
-git push -u origin main
+git clone URL_REPOSITORY
 ```
 
-Ganti `USERNAME` dengan username GitHub sendiri.
+Ganti `URL_REPOSITORY` dengan alamat repository yang digunakan.
 
-### D. Struktur di GitHub
+### 2. Masuk ke Folder Proyek
 
-```text
-analisis-foto-python/
-├── foto/
-│   └── foto.jpg
-├── analisis_foto.py
-├── requirements.txt
-├── .gitignore
-└── README.md
+```bash
+cd Analisis-Foto-Python
 ```
 
----
+Sesuaikan nama folder dengan struktur repository yang sebenarnya.
 
-## 19. Saran Saat Presentasi
+### 3. Instal Library
 
-Jangan hanya menunjukkan hasil akhir.
+Jalankan perintah berikut:
 
-Urutan penjelasan yang mudah:
-
-```text
-Foto
-  ↓
-Pillow membuka file
-  ↓
-Baca informasi dasar
-  ↓
-Baca EXIF
-  ↓
-Gambar diubah menjadi NumPy array
-  ↓
-Ambil beberapa pixel
-  ↓
-Pixel berupa angka RGB
+```bash
+python -m pip install -r requirements.txt
 ```
 
-Kalimat kunci yang mudah diingat:
+Pastikan `requirements.txt` memuat library yang benar-benar digunakan oleh program, misalnya Pillow dan NumPy.
 
-> **"Gambar digital yang terlihat oleh manusia sebenarnya direpresentasikan oleh komputer sebagai data angka. Pada gambar RGB, setiap pixel mempunyai tiga nilai angka yang mewakili Red, Green, dan Blue."**
+### 4. Jalankan Program
+
+```bash
+python analisis_foto.py
+```
+
+Program akan membaca gambar yang ditentukan dalam kode, melakukan analisis, dan menampilkan hasil sesuai implementasi program.
+
+Jika program menyimpan hasil ke `Output.txt`, periksa file tersebut setelah proses selesai.
+
+## Cara Membaca Output
+
+Output program dibagi menjadi beberapa bagian agar setiap tahap analisis lebih mudah dipahami:
+
+1. Informasi dasar file.
+2. Aspect ratio.
+3. Metadata EXIF.
+4. Informasi GPS.
+5. Representasi gambar sebagai array.
+6. Dimensi array.
+7. Contoh nilai pixel.
+8. Nilai minimum dan maksimum pixel.
+9. Statistik channel RGB.
+10. Rata-rata nilai warna.
+11. Brightness.
+12. Kontras.
+13. Jumlah warna unik.
+14. Sampling pixel.
+15. Verifikasi jumlah pixel.
+16. Estimasi data mentah.
+17. Tipe data pixel.
+18. Hash SHA-256.
+19. Informasi JPEG.
+20. Kesimpulan analisis.
+
+Pembagian ini membantu pengguna memahami bagaimana informasi sebuah foto dapat dibaca, dihitung, dan direpresentasikan menggunakan kode Python.
+
+## Kesimpulan
+
+Proyek ini menunjukkan bahwa citra digital bukan hanya gambar yang dapat dilihat secara visual, tetapi juga sekumpulan data numerik yang dapat dianalisis menggunakan pemrograman.
+
+Dengan Python, Pillow, dan NumPy, informasi dasar gambar, metadata, nilai pixel, statistik warna, brightness, kontras, serta karakteristik file JPEG dapat diperiksa secara sistematis.
+
+Melalui proyek ini, pengguna dapat mempelajari dasar pengolahan citra digital dan memahami hubungan antara gambar visual dengan representasi numeriknya.
+
+## Catatan
+
+Hasil analisis dalam dokumentasi ini berdasarkan output program pada saat dijalankan. Nilai dan metadata dapat berbeda jika file gambar diganti, dimodifikasi, atau diproses menggunakan metode yang berbeda.
