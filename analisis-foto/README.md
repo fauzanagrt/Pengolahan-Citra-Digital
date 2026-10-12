@@ -39,7 +39,6 @@ Analisis-Foto-Python/
 ├── foto/
 │   └── IMG_2.jpg
 ├── analisis_foto.py
-├── Output.txt
 ├── requirements.txt
 └── README.md
 ```
