@@ -1,0 +1,241 @@
+======================================================================
+ANALISIS FOTO DIGITAL MENGGUNAKAN PYTHON
+======================================================================
+
+[1] INFORMASI DASAR FILE
+----------------------------------------------------------------------
+Nama file          : IMG_2.jpg
+Ekstensi           : .jpg
+Format gambar      : JPEG
+Ukuran file        : 5,345,947 byte
+Ukuran file        : 5220.65 KB
+Ukuran file        : 5.10 MB
+Lebar              : 3,072 pixel
+Tinggi             : 4,080 pixel
+Resolusi           : 3,072 x 4,080 pixel
+Jumlah pixel       : 12,533,760 pixel
+Mode warna         : RGB
+
+[2] ASPECT RATIO
+----------------------------------------------------------------------
+Aspect ratio       : 0.7529
+Orientasi          : Portrait
+
+[3] METADATA / EXIF
+----------------------------------------------------------------------
+Jumlah tag EXIF    : 12
+Camera Make              : Xiaomi
+Camera Model             : 220333QAG
+Date/Time                : 2026:08:13 07:45:32
+Date/Time Original       : Tidak tersedia
+ISO                      : Tidak tersedia
+Exposure Time            : Tidak tersedia
+F-Number / Aperture      : Tidak tersedia
+Focal Length             : Tidak tersedia
+X Resolution             : 72.0
+Y Resolution             : 72.0
+Resolution Unit          : 2
+Software                 : Tidak tersedia
+Orientation              : 1
+
+[4] INFORMASI GPS
+----------------------------------------------------------------------
+GPS                  : Tersedia
+GPSLatitudeRef         : S
+GPSLatitude            : (7.0, 27.0, 25.95)
+GPSLongitudeRef        : E
+GPSLongitude           : (107.0, 37.0, 22.17)
+GPSAltitudeRef         : b'\x00'
+GPSAltitude            : 0.0
+GPSTimeStamp           : (0.0, 45.0, 16.0)
+GPSProcessingMethod    : b'ASCII\x00\x00\x00CELLID\x00'
+GPSDateStamp           : 2026:08:13
+
+[5] REPRESENTASI GAMBAR SEBAGAI ANGKA
+----------------------------------------------------------------------
+Shape                : (4080, 3072, 3)
+Jumlah dimensi       : 3
+Tipe data            : uint8
+Ukuran array         : 37,601,280 byte
+Ukuran array         : 35.86 MB
+
+[6] ANALISIS DIMENSI ARRAY
+----------------------------------------------------------------------
+Tinggi               : 4080
+Lebar                : 3072
+Channel              : 3
+
+Interpretasi:
+- Dimensi pertama  = posisi Y / baris
+- Dimensi kedua    = posisi X / kolom
+- Dimensi ketiga   = channel warna
+- Channel 0 = Red
+- Channel 1 = Green
+- Channel 2 = Blue
+
+[7] CONTOH NILAI PIXEL
+----------------------------------------------------------------------
+Pixel (x=0, y=0) = [144, 160, 183]
+Pixel (x=10, y=10) = [77, 93, 119]
+Pixel (x=100, y=100) = [87, 95, 54]
+Pixel (x=500, y=500) = [115, 125, 126]
+Pixel (x=1000, y=500) = [96, 108, 70]
+
+Catatan:
+array_image[y, x] digunakan karena NumPy
+menyimpan baris (Y) sebelum kolom (X).
+
+[8] NILAI PIXEL MINIMUM DAN MAKSIMUM
+----------------------------------------------------------------------
+Nilai pixel minimum seluruh gambar : 0
+Nilai pixel maksimum seluruh gambar: 255
+
+[9] STATISTIK CHANNEL RGB
+----------------------------------------------------------------------
+RED
+  Minimum    : 0
+  Maksimum   : 255
+  Rata-rata  : 105.61
+  Median     : 89.00
+  Std Dev    : 66.53
+
+GREEN
+  Minimum    : 0
+  Maksimum   : 255
+  Rata-rata  : 106.65
+  Median     : 91.00
+  Std Dev    : 71.38
+
+BLUE
+  Minimum    : 0
+  Maksimum   : 255
+  Rata-rata  : 96.56
+  Median     : 68.00
+  Std Dev    : 81.80
+
+[10] RATA-RATA NILAI WARNA
+----------------------------------------------------------------------
+Rata-rata Red      : 105.61
+Rata-rata Green    : 106.65
+Rata-rata Blue     : 96.56
+
+[11] ANALISIS BRIGHTNESS
+----------------------------------------------------------------------
+Brightness minimum : 0.00
+Brightness maksimum: 255.00
+Brightness rata-rata: 105.19
+Brightness median  : 88.83
+Interpretasi       : Brightness sedang
+
+[12] ANALISIS KONTRAS
+----------------------------------------------------------------------
+Standard deviation brightness: 70.47
+Interpretasi: kontras relatif tinggi.
+
+[13] JUMLAH WARNA UNIK
+----------------------------------------------------------------------
+Jumlah seluruh pixel : 12,533,760
+Jumlah warna unik    : 192,992
+
+Artinya:
+Tidak semua pixel harus memiliki warna yang berbeda.
+Beberapa pixel dapat memiliki kombinasi RGB yang sama.
+
+[14] SAMPLING PIXEL DALAM GRID
+----------------------------------------------------------------------
+Koordinat dan RGB:
+(    0,     0) = [144, 160, 183]
+(  767,     0) = [83, 103, 75]
+( 1535,     0) = [89, 103, 70]
+( 2303,     0) = [202, 211, 220]
+( 3071,     0) = [185, 192, 208]
+
+(    0,  1019) = [192, 205, 213]
+(  767,  1019) = [211, 221, 230]
+( 1535,  1019) = [222, 232, 242]
+( 2303,  1019) = [209, 219, 229]
+( 3071,  1019) = [191, 201, 210]
+
+(    0,  2039) = [51, 61, 71]
+(  767,  2039) = [24, 32, 35]
+( 1535,  2039) = [60, 71, 77]
+( 2303,  2039) = [45, 54, 59]
+( 3071,  2039) = [91, 95, 80]
+
+(    0,  3059) = [119, 98, 71]
+(  767,  3059) = [35, 18, 8]
+( 1535,  3059) = [21, 18, 13]
+( 2303,  3059) = [11, 0, 0]
+( 3071,  3059) = [64, 58, 26]
+
+(    0,  4079) = [81, 64, 38]
+(  767,  4079) = [40, 29, 11]
+( 1535,  4079) = [47, 45, 33]
+( 2303,  4079) = [43, 45, 23]
+( 3071,  4079) = [16, 24, 13]
+
+
+[15] VERIFIKASI JUMLAH PIXEL
+----------------------------------------------------------------------
+Tinggi array        : 4080
+Lebar array         : 3072
+Perhitungan         : 4080 x 3072
+Hasil               : 12,533,760 pixel
+STATUS              : SESUAI
+
+[16] ESTIMASI DATA RAW PIXEL
+----------------------------------------------------------------------
+Byte per channel    : 1
+Jumlah channel      : 3
+Byte per pixel      : 3
+Data pixel mentah   : 37,601,280 byte
+Data pixel mentah   : 35.86 MB
+
+Catatan:
+Ukuran file JPEG tidak sama dengan ukuran
+data pixel mentah karena JPEG menggunakan kompresi.
+
+[17] TIPE DATA PIXEL
+----------------------------------------------------------------------
+NumPy dtype         : uint8
+Ukuran 1 nilai     : 1 byte
+
+uint8 berarti setiap nilai pixel berada
+pada rentang 0 sampai 255.
+
+Contoh:
+0   = intensitas paling rendah
+255 = intensitas paling tinggi
+
+[18] IDENTITAS FILE DENGAN HASH
+----------------------------------------------------------------------
+SHA-256             : 4c27f4877fec0e7637dadc9070421820c22a3319166284b67c9926f65e471236
+
+[19] INFORMASI KHUSUS JPEG
+----------------------------------------------------------------------
+File merupakan JPEG.
+Jumlah tabel quantization: 2
+
+JPEG menggunakan quantization sebagai bagian dari proses kompresi.
+
+[20] KESIMPULAN ANALISIS
+----------------------------------------------------------------------
+
+File "IMG_2.jpg" memiliki:
+
+1. Resolusi 3,072 x 4,080 pixel.
+2. Total 12,533,760 pixel.
+3. Mode warna RGB.
+4. Data gambar berhasil diubah menjadi NumPy array.
+5. Setiap pixel RGB direpresentasikan oleh 3 angka.
+6. Nilai pixel berada pada rentang 0 sampai 255.
+7. Metadata EXIF dapat dibaca menggunakan Pillow.
+8. Sebagian informasi EXIF dapat tersedia dan sebagian lainnya tidak.
+9. Nilai RGB dapat digunakan untuk melakukan analisis statistik.
+10. JPEG menggunakan kompresi sehingga ukuran file tidak sama
+    dengan ukuran data pixel mentah.
+11. SHA-256 dapat digunakan untuk mengidentifikasi file secara digital.
+
+======================================================================
+ANALISIS SELESAI
+======================================================================

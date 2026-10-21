@@ -131,7 +131,7 @@ else:
     for tag_id, tag_name in exif_tags.items():
 
         value = exif.get(tag_id)
-
+    
         if value is None:
             print(f"{tag_name:<25}: Tidak tersedia")
             continue
